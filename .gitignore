@@ -1,0 +1,42 @@
+# Environment (keep the blank example trackable)
+.env
+.env.*
+!.env.example
+application-local.properties
+application-prod.properties
+application-local.yml
+application-prod.yml
+application-local.yaml
+application-prod.yaml
+
+# Java
+target/
+*.class
+
+# Editors
+.idea/
+*.iml
+.vscode/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Private keys, keystores and local credential directories
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa
+id_ed25519
+.aws/
+.ssh/
+secrets/

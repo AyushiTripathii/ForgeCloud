@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: forgecloud-api
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/forgecloud}
+    username: ${SPRING_DATASOURCE_USERNAME:forgecloud}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+server:
+  error:
+    include-message: never
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+forgecloud:
+  github:
+    webhook-secret: ${FORGECLOUD_GITHUB_WEBHOOK_SECRET}
