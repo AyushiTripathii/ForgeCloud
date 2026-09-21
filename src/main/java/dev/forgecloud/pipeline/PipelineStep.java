@@ -75,7 +75,54 @@ public class PipelineStep {
         this.status = PipelineStepStatus.PENDING;
         this.createdAt = Instant.now();
     }
+    public void start() {
+    requireStatus(PipelineStepStatus.PENDING);
 
+    Instant now = Instant.now();
+    this.status = PipelineStepStatus.RUNNING;
+    this.startedAt = now;
+}
+
+public void succeed() {
+    requireStatus(PipelineStepStatus.RUNNING);
+
+    Instant now = Instant.now();
+    this.status = PipelineStepStatus.SUCCESS;
+    this.finishedAt = now;
+    this.exitCode = 0;
+}
+
+public void fail(int exitCode) {
+    requireStatus(PipelineStepStatus.RUNNING);
+
+    if (exitCode == 0) {
+        throw new IllegalArgumentException(
+            "Failure exit code must be non-zero"
+        );
+    }
+
+    Instant now = Instant.now();
+    this.status = PipelineStepStatus.FAILED;
+    this.finishedAt = now;
+    this.exitCode = exitCode;
+}
+
+public void skip() {
+    requireStatus(PipelineStepStatus.PENDING);
+
+    Instant now = Instant.now();
+    this.status = PipelineStepStatus.SKIPPED;
+    this.finishedAt = now;
+}
+
+private void requireStatus(PipelineStepStatus expected) {
+    if (this.status != expected) {
+        throw new IllegalStateException(
+            "Expected step status " + expected
+                + " but was " + this.status
+        );
+    }
+}
     public UUID getId() {
         return id;
     }
