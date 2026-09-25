@@ -33,6 +33,17 @@ public class PipelineRun {
         this.status = PipelineStatus.QUEUED; this.triggerType = triggerType; this.githubDeliveryId = deliveryId;
         this.createdAt = Instant.now();
     }
+    public void start() {
+    if (this.status != PipelineStatus.QUEUED) {
+        throw new IllegalStateException(
+            "Only a queued pipeline can start"
+        );
+    }
+
+    Instant now = Instant.now();
+    this.status = PipelineStatus.RUNNING;
+    this.startedAt = now;
+}
     public UUID getId() { return id; }
     public Project getProject() { return project; }
     public String getCommitSha() { return commitSha; }
