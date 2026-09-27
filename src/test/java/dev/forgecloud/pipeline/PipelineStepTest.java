@@ -29,6 +29,20 @@ class PipelineStepTest {
         return new PipelineStep(pipeline, "Run tests", 1);
     }
 
+    private PipelineRun newPipeline() {
+        Project project = new Project(
+                "Test project",
+                "https://github.com/example/demo",
+                "example/demo",
+                "main"
+        );
+
+        return new PipelineRun(
+                project, null, "main", TriggerType.MANUAL, null
+        );
+    }
+
+
     @Test
     void pendingStepCanStart() {
         PipelineStep step = newStep();
@@ -133,6 +147,110 @@ class PipelineStepTest {
         assertNull(step.getFinishedAt());
         assertNull(step.getExitCode());
     }
+
+    @Test
+    void pipelineRunIsNULL() {
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> new PipelineStep(null, "test", 1)
+        );
+
+        assertEquals("Pipeline run is required", exception.getMessage());
+    }
+
+    @Test
+    void pipelineRunNameNULL() {
+        PipelineRun pipeline = newPipeline();
+
+        IllegalArgumentException exception_null = assertThrows(
+                IllegalArgumentException.class, () -> {
+                    new PipelineStep(pipeline, null, 1);
+                }
+        );
+        assertEquals("Step name must contain 1–100 characters", exception_null.getMessage());
+    }
+
+    @Test
+    void pipelineRunNameIsEmpty() {
+        PipelineRun pipeline = newPipeline();
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> {
+                    new PipelineStep(pipeline, "", 1);
+                }
+        );
+        assertEquals("Step name must contain 1–100 characters", exception.getMessage());
+    }
+
+    @Test
+    void pipelineRunNameIsBlank() {
+        PipelineRun pipeline = newPipeline();
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> {
+                    new PipelineStep(pipeline, "       ", 1);
+                }
+        );
+        assertEquals("Step name must contain 1–100 characters", exception.getMessage());
+    }
+
+    @Test
+    void pipelineRunNameLengthOver100() {
+        PipelineRun pipeline = newPipeline();
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> {
+                    new PipelineStep(pipeline, "1".repeat(101), 1);
+                }
+        );
+        assertEquals("Step name must contain 1–100 characters", exception.getMessage());
+    }
+
+    @Test
+    void pipelineRunNameLengthIs100() {
+        PipelineRun pipeline = newPipeline();
+
+        assertDoesNotThrow(() -> {
+                    new PipelineStep(pipeline, "1".repeat(100), 1);
+                }
+        );
+    }
+
+    @Test
+    void stepOrderIsZero() {
+        PipelineRun pipeline = newPipeline();
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> {
+                    new PipelineStep(pipeline, "test", 0);
+                }
+        );
+        assertEquals("Step order must be at least 1", exception.getMessage());
+    }
+
+    @Test
+    void stepOrderIsNegative() {
+        PipelineRun pipeline = newPipeline();
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> {
+                    new PipelineStep(pipeline, "test", -1);
+                }
+        );
+        assertEquals("Step order must be at least 1", exception.getMessage());
+    }
+
+    @Test
+    void stepOrderIsOne() {
+        PipelineRun pipeline = newPipeline();
+
+        assertDoesNotThrow(() -> {
+                    new PipelineStep(pipeline, "test", 1);
+                }
+        );
+    }
+
+
 
     @ParameterizedTest
     @EnumSource(
