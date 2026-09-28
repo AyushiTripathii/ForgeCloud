@@ -15,6 +15,8 @@ This repository is the safe **Milestone 1 foundation**:
 
 Pipelines remain `QUEUED`. There is intentionally no worker and no user-code execution yet.
 
+For common Windows setup problems, see the [Windows Troubleshooting Guide](docs/TROUBLESHOOTING.md).
+
 ## Run it
 
 Read [START_HERE.md](START_HERE.md), then from this directory:
